@@ -1,0 +1,87 @@
+
+------------------------------------------------------------------------
+
+----------------------------------------------------------------------
+
+-----------------------------------------------------------------------
+
+------------------------------------------------------------------------
+
+-------------Measure from testing---------------------------------------------------------
+
+RANKX = RANKX(
+    ALLSELECTED(TableSuppliers[country]),
+    [Profiles], ,DESC,Dense
+)
+----------------
+Top1Countries = 
+VAR CountriesWithRankx = 
+ADDCOLUMNS(
+    VALUES(TableSuppliers[country]),
+    "Rankx", [RANKX]
+)
+VAR Contries1 = FILTER(
+    CountriesWithRankx,
+    [Rankx]=1
+)
+RETURN
+CONCATENATEX(
+    Contries1, [country],", ")
+-------------------------------
+Profiles = DISTINCTCOUNT(TableSuppliers[pven])
+-----------------End of Measure from testing-------------------------------------------
+
+-----------------------------------------------------------------------------------------------------------
+ConcatCountries = IF(
+    _Measures[RANKX]=1,
+    CONCATENATEX(Profiles_with_MaxRequestDate, Profiles_with_MaxRequestDate[cr3f3_cpicountry],", ",_Measures[RANKX],DESC),
+    0
+)
+-------------------------------------------------------------------------------------------------
+RANKX = RANKX(
+    ALLSELECTED( Profiles_with_MaxRequestDate[cr3f3_cpicountry]),
+    [Profiles], ,DESC,Dense
+)
+---------------------------------------------------------------------------------------------------
+% Status = DIVIDE(
+    [Profiles],
+    CALCULATE(
+        [Profiles],
+        ALL(Profiles_with_MaxRequestDate[sdd_profileflowstatus])
+    )
+)
+--------------------------------------------------------------------------------------------------
+Easenet = 
+VAR Easenet = 
+CALCULATE(
+    [Profiles],
+    Profiles_with_MaxRequestDate[sdd_spscchits]="Yes",
+    Profiles_with_MaxRequestDate[sdd_spsccclearance]="Easenet"
+)
+RETURN
+IF(
+    NOT ISBLANK(Easenet),
+    Easenet,
+    "N/A"
+)
+
+/*
+Initial measure:
+IF( NOT ISBLANK(
+CALCULATE(
+    [Profiles],
+    Profiles_with_MaxRequestDate[sdd_spscchits]="Yes",
+    Profiles_with_MaxRequestDate[sdd_spsccclearance]="Easenet"
+)
+),
+CALCULATE(
+    [Profiles],
+    Profiles_with_MaxRequestDate[sdd_spscchits]="Yes",
+    Profiles_with_MaxRequestDate[sdd_spsccclearance]="Easenet"
+)
+,
+"N/A"
+)
+*/
+-----------------------------------------------------------------------
+Profiles = DISTINCTCOUNT(Profiles_with_MaxRequestDate[cr3f3_gipven])
