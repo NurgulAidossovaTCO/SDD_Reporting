@@ -5,7 +5,26 @@
 
 -----------------------------------------------------------------------
 
-------------------------------------------------------------------------
+-------------------Date Table-----------------------------------------------------
+
+MINX&MAXX date table: 
+
+DateTable =  
+ADDCOLUMNS (  
+CALENDAR(MINX('Table 1', 'Table 1'[Дата]), 
+MAXX('Table 1', 'Table 1'[Дата])), 
+"DateAsInteger", FORMAT ( [date], "DDMMYYYY" ), 
+"Year", YEAR ( [date] ),  
+"MonthNo", FORMAT ( [date], "MM" ),  
+"YearMonthNo", FORMAT ( [date], "MM/YYYY" ),  
+"Month Year", FORMAT ( [date], "mmmm YYYY" ),  
+"MonthShort", FORMAT ( [date], "mmm" ), 
+"MonthLong", FORMAT ( [date], "mmmm" ),  
+"WeekNo", WEEKDAY ( [date],2 ),  
+"WeekDay", FORMAT ( [date], "dddd"),  
+"WeekDayShort", FORMAT ( [date], "ddd" ),  
+"Quarter", "Q" & FORMAT ( [date], "Q" ),  
+"YearQuarter", FORMAT ( [date], "YYYY" ) & "/Q" & FORMAT ( [date], "Q" )) 
 
 -------------Measure from testing---------------------------------------------------------
 
